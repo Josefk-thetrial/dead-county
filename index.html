@@ -9,9 +9,105 @@
 <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-<!-- FULL GAME LOADED VIA SECOND COMMIT IF NEEDED -->
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<p style="color:#e8e0d0;font-family:monospace;padding:40px;text-align:center">Loading DEAD COUNTY… If you see this, the full index is being uploaded. Refresh in a moment.</p>
+<div id="view"><canvas id="cv"></canvas></div>
+<div id="vig"></div>
+<div id="hud" class="hidden">
+  <div id="stats">
+    <div class="bar"><i data-lucide="heart"></i><div class="tr"><div class="fl" id="bHpF"></div></div></div>
+    <div class="bar"><i data-lucide="drumstick"></i><div class="tr"><div class="fl" id="bHuF"></div></div></div>
+    <div class="bar"><i data-lucide="droplet"></i><div class="tr"><div class="fl" id="bThF"></div></div></div>
+    <div class="bar"><i data-lucide="zap"></i><div class="tr"><div class="fl" id="bFaF"></div></div></div>
+    <div class="mood"><i data-lucide="smile" id="stIco"></i><span id="stTx">Calm</span><span id="cndTx" style="margin-left:8px;color:#c86"></span></div>
+  </div>
+  <div id="clk">
+    <div><span class="dy" id="dyEl">Day 1</span> · <span id="tmEl">09:00</span></div>
+    <div class="wx"><i data-lucide="sun" id="wxIco"></i><span id="tpEl">21°C</span><span id="infIco" class="hidden"><i data-lucide="biohazard"></i></span></div>
+  </div>
+  <div id="mmWrap"><canvas id="mmc" width="320" height="320"></canvas></div>
+  <div id="weap"><div class="nm" id="wNm">Bare Hands</div><div class="du"><i id="wDu" style="width:0%"></i></div><div class="am" id="wAm"></div></div>
+  <div id="msgL"></div>
+  <div id="hint">TAB inv · C char · B build · E interact · RClick menu · SHIFT run · CTRL sneak</div>
+  <div id="crouchI" class="hidden">SNEAKING</div>
+</div>
+<div id="invP" class="hidden">
+  <div class="col panel"><h3>EQUIPMENT</h3><div id="eqSlots"></div></div>
+  <div class="col panel"><h3>INVENTORY <span id="wgEl"></span></h3><div id="invGrid"></div><button class="btn small" id="crfBtn" style="margin-top:8px;width:100%">CRAFTING [K]</button></div>
+  <div class="col panel hidden" id="contP"><h3 id="contT">CONTAINER</h3><div id="contList"></div></div>
+</div>
+<div id="craftP" class="hidden"><div class="panel" style="flex:1;display:flex;flex-direction:column"><h3>RECIPES</h3><div id="recL"></div></div><div class="panel" style="flex:1.2"><h3>DETAILS</h3><div id="recD">Select a recipe</div></div></div>
+<div id="charP" class="panel hidden"></div>
+<div id="buildP" class="panel hidden"></div>
+<div id="ctxM" class="hidden"></div>
+<div id="ttip"></div>
+<div id="mapBig" class="hidden"><canvas id="mapCv" width="480" height="480"></canvas></div>
+<div id="pauseM" class="hidden"><div class="panel" style="text-align:center;min-width:300px">
+  <h3 style="font-size:26px;color:var(--amber);margin-bottom:12px">PAUSED</h3>
+  <button class="btn" id="pRes">Resume</button><br>
+  <button class="btn" id="pSav">Save Game</button><br>
+  <button class="btn" id="pQuit">Save & Quit</button>
+  <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-size:18px;color:#a99">
+    <div style="margin-bottom:6px">Volume <span id="volTx">90%</span></div>
+    <input type="range" id="volSl" min="0" max="100" value="90" style="width:220px;accent-color:var(--amber)">
+    <div style="margin-top:8px"><button class="btn small" id="pMute">Mute / Unmute</button></div>
+  </div>
+  <div id="saveHint" style="margin-top:10px;font-size:15px;color:#665"></div>
+</div></div>
+<div id="touchUI"><div id="joyB"><div id="joyS"></div></div><div class="tbtn" id="btnA">ATK</div><div class="tbtn" id="btnE">USE</div><div class="tbtn" id="btnI">INV</div></div>
+<div id="fade"></div>
+
+<div id="titleS" class="screen">
+  <h1 class="logo">DEAD COUNTY</h1>
+  <div class="sub">A ZOMBOID-LIKE SURVIVAL SANDBOX</div>
+  <button class="btn" id="tNew">NEW GAME</button>
+  <button class="btn hidden" id="tCon">CONTINUE</button>
+  <button class="btn" id="tHelp">CONTROLS / HELP</button>
+  <div style="position:absolute;bottom:16px;color:#554;font-size:15px;text-align:center;line-height:1.5">
+    Headphones recommended · Sound synthesized live · World 100% procedural<br>
+    <span style="color:#665">v1.2 · Visual polish</span>
+  </div>
+</div>
+
+<div id="createS" class="screen hidden">
+  <h3 style="font-family:'Press Start 2P';font-size:18px;color:var(--amber);margin-bottom:14px">CHARACTER CREATION</h3>
+  <input id="nmIn" maxlength="14" placeholder="Name" value="Survivor">
+  <div id="swWrap"></div>
+  <div id="ptsEl">POINTS: 0</div>
+  <div id="trWrap"><div id="trList"></div><div id="trDesc">Hover a trait. Negative traits grant points to spend on positive ones.</div></div>
+  <div style="margin-top:14px"><button class="btn" id="cStart">BEGIN SURVIVAL</button><button class="btn" id="cBack">BACK</button></div>
+</div>
+
+<div id="loadS" class="screen hidden">
+  <h3 style="font-family:'Press Start 2P';font-size:16px;color:var(--amber)">GENERATING WORLD</h3>
+  <div id="loadBar"><div id="loadFl"></div></div><div id="loadTx">...</div>
+</div>
+
+<div id="helpS" class="screen hidden">
+  <h3 style="font-family:'Press Start 2P';font-size:16px;color:var(--amber);margin-bottom:18px">HOW TO PLAY</h3>
+  <div class="panel keys">
+    <div><b>WASD / Arrows</b> Move</div><div><b>Mouse</b> Aim</div><div><b>LMB</b> Attack / Shoot / Use</div>
+    <div><b>RMB</b> Context menu on objects</div><div><b>E</b> Interact / Search / Enter car</div>
+    <div><b>TAB / I</b> Inventory</div><div><b>K</b> Crafting</div><div><b>C</b> Character & Skills</div>
+    <div><b>B</b> Build mode</div><div><b>M</b> Map</div><div><b>SHIFT</b> Sprint (loud)</div>
+    <div><b>CTRL</b> Sneak (quiet)</div><div><b>SPACE</b> Shove zombies</div><div><b>1-9</b> Quick-use slots</div>
+    <div><b>R</b> Reload firearm</div><div><b>F</b> Flashlight</div><div><b>Q</b> Swap last weapon</div>
+    <div><b>Z</b> Sleep (near bed)</div><div><b>G</b> Shout (lure zombies)</div><div><b>ESC</b> Pause</div>
+  </div>
+  <div class="panel" style="margin-top:12px;max-width:640px;font-size:18px;color:#a99">
+    Scavenge. Barricade. Survive. Eat, drink, rest. Bites are usually fatal. Power fails around day 7-14, water after day 14. Death is permanent.<br>
+    <span style="color:#8a7">Tip: use the pause menu (ESC) to adjust volume. Autosave runs every ~2 minutes.</span>
+  </div>
+  <button class="btn" id="hBack" style="margin-top:14px">BACK</button>
+</div>
+
+<div id="deathS" class="screen hidden">
+  <h1>YOU DIED</h1>
+  <div class="st" id="deathSt"></div>
+  <button class="btn" id="dNew" style="margin-top:22px">TRY AGAIN</button>
+</div>
+
+<script src="game.js"></script>
 </body>
 </html>
