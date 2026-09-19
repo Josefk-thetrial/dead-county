@@ -1,17 +1,24 @@
 # DEAD COUNTY
 
-**Isometric survival sandbox** inspired by *Project Zomboid* — fully procedural world, sprites, and audio. Zero external game assets.
+**Isometric survival sandbox** inspired by *Project Zomboid* — fully procedural world, sprites, and audio.
 
-[![Play](https://img.shields.io/badge/play-in%20browser-e8453c?style=for-the-badge)](https://josefk-thetrial.github.io/dead-county/)
-[![License](https://img.shields.io/badge/license-MIT-f0c14b?style=flat-square)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-f0c14b.svg)](LICENSE)
 
 > Scavenge. Barricade. Survive. Death is permanent.
 
 ## Play
 
-Open [`index.html`](index.html) in any modern browser, or use GitHub Pages after enabling it on this repo.
+Open **`index.single.html`** (or `index.html` + `style.css` + `game.js`) in Chrome, Firefox or Edge.
 
-**Headphones recommended** — sound is synthesized live with the Web Audio API.
+Headphones recommended — sound is synthesized live.
+
+### GitHub Pages
+
+1. Upload the full game file as `index.html` (see below)
+2. Settings → Pages → branch `main` → `/ (root)`
+3. Open `https://josefk-thetrial.github.io/dead-county/`
+
+> **Note:** the complete engine (~200KB) may need a manual upload via the GitHub web UI (*Add file → Upload files*) if the automated push hits size limits. Local build is complete and playable.
 
 ## Controls
 
@@ -19,45 +26,27 @@ Open [`index.html`](index.html) in any modern browser, or use GitHub Pages after
 |-----|--------|
 | WASD / Arrows | Move |
 | Mouse | Aim |
-| LMB | Attack / Shoot / Use |
+| LMB | Attack / Shoot |
 | RMB | Context menu |
-| E | Interact / Search / Enter vehicle |
+| E | Interact |
 | TAB / I | Inventory |
 | K | Crafting |
-| C | Character & skills |
-| B | Build mode |
+| C | Character |
+| B | Build |
 | M | Map |
-| SHIFT | Sprint (loud) |
-| CTRL | Sneak (quiet) |
-| SPACE | Shove zombies |
-| 1–9 | Quick-use slots |
-| R | Reload |
-| F | Flashlight |
-| Q | Swap last weapon |
-| Z | Sleep |
-| G | Shout (lure) |
-| ESC | Pause / volume |
+| SHIFT | Sprint |
+| CTRL | Sneak |
+| SPACE | Shove |
+| ESC | Pause + volume |
 
-## Features
+## v1.2 Visual redesign
 
-- 320×320 procedural town (roads, lakes, forests, buildings)
-- Day/night cycle, seasons, weather (rain, fog, snow)
-- Needs: hunger, thirst, fatigue, stress, temperature
-- Infection from bites, bleeding, fractures
-- Crafting, building, farming, fishing, foraging
-- Vehicles, generators, barricades, traps
-- Trait-based character creation
-- Local save / continue (permadeath)
-
-## Tech
-
-Single-file HTML5 game:
-
-- Canvas 2D pixel art (all sprites painted at runtime)
-- Procedural world generation
-- Web Audio synthesis (no sound files)
-- Chunk-based spatial index for performance
+- Atmospheric dark UI with glass panels and amber accents
+- Polished HUD bars, inventory slots, buttons
+- Soft scanlines, glowing logo, better typography hierarchy
+- Volume slider + mute in pause menu
+- Confirm before overwriting a saved game
 
 ## License
 
-MIT — do whatever you want, just survive.
+MIT
